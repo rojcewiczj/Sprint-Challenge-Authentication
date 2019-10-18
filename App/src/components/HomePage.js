@@ -13,7 +13,7 @@ const HomePage = () => {
       axiosWithAuth()
         .get('/jokes') 
         .then(res => 
-          setUserList(res.data.users))
+          setUserList(res.data))
         .catch(error => console.log(error));
     }
       getData(); 
@@ -22,7 +22,7 @@ const HomePage = () => {
       
       <div className="whole-page">
          {userList.map(user => (
-           <p>{user}</p>
+           <p>{user.joke}</p>
          ))}
      <h1>Hello</h1>
       </div>
