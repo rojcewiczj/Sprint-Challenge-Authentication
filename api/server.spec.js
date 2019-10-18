@@ -6,7 +6,7 @@ const Users = require('../users/users-model');
 
 const db = require('../database/dbConfig');
 
-describe('GET /api/jokes', () => {
+describe('GET /api/jokes POST /api/auth/register POST /api/auth/login', () => {
   
     it('should return 400 http status code', () => {
       return request(server)
@@ -15,6 +15,22 @@ describe('GET /api/jokes', () => {
           expect(response.status).toBe(400);
         });
     });
+     
+    it('should return 404 http status code', () => {
+        return request(server)
+          .get('/api/auth/login')
+          .then(response => {
+            expect(response.status).toBe(404);
+          });
+      });
+       
+    it('should return 404 http status code', () => {
+        return request(server)
+          .get('/api/auth/register')
+          .then(response => {
+            expect(response.status).toBe(404);
+          });
+      });
   
    
     test('should return JSON', async () => {
@@ -23,6 +39,18 @@ describe('GET /api/jokes', () => {
      
       expect(response.type).toMatch(/json/i);
     });
+    test('should return text', async () => {
+        const response = await request(server).get('/api/auth/login');
+    
+       
+        expect(response.type).toMatch(/text/i);
+      });
+      test('should return text', async () => {
+        const response = await request(server).get('/api/auth/register');
+    
+       
+        expect(response.type).toMatch(/text/i);
+      });
   
     test('should return JSON using .then()', () => {
       return request(server)
