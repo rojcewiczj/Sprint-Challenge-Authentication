@@ -2,17 +2,17 @@ const request = require('supertest');
 
 const server = require('./server.js');
 
-const Users = require('./usersModel.js');
+const Users = require('../users/users-model');
 
-const db = require('../data/dbConfig.js');
+const db = require('../database/dbConfig');
 
 describe('GET /api/jokes', () => {
   
-    it('should return 200 http status code', () => {
+    it('should return 400 http status code', () => {
       return request(server)
         .get('/api/jokes/')
         .then(response => {
-          expect(response.status).toBe(200);
+          expect(response.status).toBe(400);
         });
     });
   
@@ -34,11 +34,11 @@ describe('GET /api/jokes', () => {
     });
   
     
-    it('should return { api: "up" }', async () => {
+    it('should return { message: "No token provided" }', async () => {
       const response = await request(server).get('/api/jokes');
   
-      expect(response.body).toEqual({ api: 'up' });
-      expect(response.body.api).toBe('up');
+      expect(response.body).toEqual({ message: 'No token provided' });
+      expect(response.body.message).toBe('No token provided');
     });
   
     it('toEqual', () => {
@@ -66,7 +66,7 @@ describe('GET /api/jokes', () => {
         expect(records).toHaveLength(0);
   
         // insert one record
-        await Users.add({ name: 'Jane' });
+        await Users.add({ username: 'Jane', password:'bleepblork' });
   
         // check we now have one record in the table
         const users = await db('users');
@@ -75,19 +75,19 @@ describe('GET /api/jokes', () => {
     });
   
     it('should add the provided user to database ', async () => {
-      let user = await Users.add({ name: 'Jane' });
-      expect(user.name).toBe('Jane');
+      let user = await Users.add({ username: 'Jane' , password:'bleepblorkblork' });
+      expect(user.username).toBe('Jane');
   
-      user = await Users.add({ name: 'Jason' });
-      expect(user.name).toBe('Jason');
+      user = await Users.add({ username: 'Jason', password:'bleepblorkbleep' });
+      expect(user.username).toBe('Jason');
   
       const users = await db('users');
       expect(users).toHaveLength(2);
   
     });
     it('should remove the provided user from database ', async () => {
-      let user = await Users.add({ name: 'Jane' });
-      expect(user.name).toBe('Jane');
+      let user = await Users.add({ username: 'Jane', password:'bleepblorkbleeeeepno' });
+      expect(user.username).toBe('Jane');
   
        await Users.remove({ id: '1' });
       
